@@ -10,27 +10,76 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 20),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 'Username',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: Color.fromRGBO(255, 255, 255, 5),
                   decoration: TextDecoration.none,
+                  fontSize: 40,
                 ),
-                textScaler: TextScaler.linear(1.5),
-                textAlign: TextAlign.center,
               ),
             ],
           ),
-          Row(children: [Text('Score:'), Text('Level:')]),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'Score',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 5),
+                      decoration: TextDecoration.none,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Text(
+                    '10',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 5),
+                      decoration: TextDecoration.none,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    'Level',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 5),
+                      decoration: TextDecoration.none,
+                      fontSize: 30,
+                    ),
+                  ),
+                  Text(
+                    'Expert',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 5),
+                      decoration: TextDecoration.none,
+                      fontSize: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
