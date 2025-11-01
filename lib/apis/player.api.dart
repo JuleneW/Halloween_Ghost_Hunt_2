@@ -1,17 +1,10 @@
 import 'dart:convert';
+// import 'package:ghost_hunt/models/inventory_item.dart';
 import 'package:ghost_hunt/models/player.dart';
 import 'package:http/http.dart' as http;
 import '../globals.dart';
 
 class PlayerApi {
-  //   # Local json server (no install)
-  //    npx json-server@latest --watch db.json --port 3001
-  // Endpoints created automatically:
-  // GET/POST http://localhost:3001/ghost-types
-  // GET/POST http://localhost:3001/players
-  // GET/PUT/PATCH/DELETE http://localhost:3001/ghost-types/:id (same for players)
-  // It hot-reloads when you edit db.json.
-
   static Future<List<Player>> fetchPlayers() async {
     final uri = Uri.parse("$server/players");
     final response = await http.get(uri);
@@ -38,27 +31,32 @@ class PlayerApi {
     }
   }
 
-  /// Uses ONLY existing endpoints:
-  /// - GET /players to check if username exists (case-insensitive)
-  /// - POST /players to create if it doesn't
-  /// Returns the correct welcome message.
-  static Future<String> checkOrCreateWelcome(String username) async {
-    final trimmed = username.trim();
-    if (trimmed.isEmpty) throw Exception('Username is empty');
+  // 1. check if user exists
+  static Future<Player?> getPlayerByName(String username) async {
+    final uri = Uri.parse('$server/players?username=$username');
+    final resp = await http.get(uri);
+    if (resp.statusCode == 200) {
+      final data = jsonDecode(resp.body);
+      if (data is List && data.isNotEmpty) {
+        return Player.fromJson(data[0]);
+      }
+    }
+    return null;
+  }
 
-    // 1) Check existence by scanning the list
-    final players = await fetchPlayers();
-    final match = players.firstWhere(
-      (p) => p.username.toLowerCase() == trimmed.toLowerCase(),
-      orElse: () => Player(username: ''),
+  // 2. create user
+  static Future<Player> createPlayer(String username) async {
+    final uri = Uri.parse('$server/players');
+    final resp = await http.post(
+      uri,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'username': username}),
     );
 
-    if (match.username.isNotEmpty) {
-      return 'Welcome back "${match.username}"';
+    if (resp.statusCode == 201 || resp.statusCode == 200) {
+      return Player.fromJson(jsonDecode(resp.body));
+    } else {
+      throw Exception('Could not create user');
     }
-
-    // 2) Not found → create
-    await savePlayer(Player(username: trimmed));
-    return 'Welcome "$trimmed"';
   }
 }

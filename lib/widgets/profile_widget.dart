@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ghost_hunt/models/player.dart';
 
-class ProfileWidget extends StatefulWidget {
-  const ProfileWidget({super.key});
+class ProfileWidget extends StatelessWidget {
+  final Player player;
 
-  @override
-  State<ProfileWidget> createState() => _ProfileWidgetState();
-}
+  const ProfileWidget({super.key, required this.player});
 
-class _ProfileWidgetState extends State<ProfileWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -20,7 +18,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Username',
+                player.username,
                 style: TextStyle(
                   color: Color.fromRGBO(255, 255, 255, 5),
                   decoration: TextDecoration.none,

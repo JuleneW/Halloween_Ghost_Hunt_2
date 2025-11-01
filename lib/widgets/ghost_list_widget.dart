@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:ghost_hunt/models/ghost_type.dart';
 import 'package:ghost_hunt/widgets/ghost_card.dart';
 
-class GhostListWidget extends StatefulWidget {
-  // final List<String> items;
-  const GhostListWidget({super.key});
+class GhostListWidget extends StatelessWidget {
+  final List<GhostType> ghosts;
+  final Set<int> caughtGhostTypeIds;
 
-  @override
-  State<GhostListWidget> createState() => _GhostListWidgetState();
-}
+  const GhostListWidget({
+    super.key,
+    required this.ghosts,
+    required this.caughtGhostTypeIds,
+  });
 
-class _GhostListWidgetState extends State<GhostListWidget> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [GhostCard(), GhostCard(), GhostCard(), GhostCard()],
+    return ListView.builder(
+      itemCount: ghosts.length,
+      itemBuilder: (context, index) {
+        final ghost = ghosts[index];
+        final isCatched = caughtGhostTypeIds.contains(ghost.id);
+        return GhostCard(ghost: ghost, isCatched: isCatched);
+      },
     );
   }
 }
