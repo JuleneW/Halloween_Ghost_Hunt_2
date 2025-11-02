@@ -1,6 +1,3 @@
-//
-// lib/models/inventory_item.dart
-
 class InventoryItem {
   final int id;
   final int playerId;

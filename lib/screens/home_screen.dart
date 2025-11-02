@@ -14,10 +14,7 @@ class HomeScreen extends StatelessWidget {
             padding: EdgeInsets.only(top: 20.0),
             child: Text(
               'Ghost Hunt',
-              style: TextStyle(
-                color: Color.fromARGB(255, 255, 255, 255),
-                fontFamily: 'Creepster',
-              ),
+              style: TextStyle(color: Colors.white, fontFamily: 'Creepster'),
               textScaler: TextScaler.linear(1.5),
             ),
           ),
@@ -40,12 +37,10 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute<void>(
-                        builder: (context) => const LoginScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
                     );
                   },
-                  child: const Text('Start Game'),
+                  child: const Text('Start'),
                 ),
               ),
             ),

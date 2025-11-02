@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:ghost_hunt/models/player.dart';
 import 'package:http/http.dart' as http;
 import 'package:ghost_hunt/globals.dart';
@@ -41,10 +42,8 @@ class PlayerApi {
     final resp = await http.get(uri);
 
     // DEBUG
-    // ignore: avoid_print
-    print('GET $uri → ${resp.statusCode}');
-    // ignore: avoid_print
-    print('BODY: ${resp.body}');
+    log('GET $uri → ${resp.statusCode}');
+    log('BODY: ${resp.body}');
 
     if (resp.statusCode == 200) {
       final data = json.decode(resp.body);
@@ -67,10 +66,8 @@ class PlayerApi {
     );
 
     // DEBUG
-    // ignore: avoid_print
-    print('POST $uri → ${resp.statusCode}');
-    // ignore: avoid_print
-    print('BODY: ${resp.body}');
+    log('POST $uri → ${resp.statusCode}');
+    log('BODY: ${resp.body}');
 
     if (resp.statusCode == 201 || resp.statusCode == 200) {
       return Player.fromJson(json.decode(resp.body));

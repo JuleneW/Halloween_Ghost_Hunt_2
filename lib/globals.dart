@@ -11,4 +11,4 @@ String? globalUsername;
 // String server = "http://localhost:3000";
 // start localTunnel (correct port) for smartphone and copy url: lt --port 3000
 // Visit this url in serving pc browser for password --> https://loca.lt/mytunnelpassword
-String server = 'https://strong-news-go.loca.lt';
+String server = 'https://heavy-apes-brush.loca.lt';
