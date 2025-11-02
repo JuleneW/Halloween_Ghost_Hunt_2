@@ -3,7 +3,7 @@ import 'package:ghost_hunt/apis/player.api.dart';
 import 'package:ghost_hunt/models/player.dart';
 
 class PlayerListPage extends StatefulWidget {
-  const PlayerListPage({Key? key}) : super(key: key);
+  const PlayerListPage({super.key});
 
   @override
   State<StatefulWidget> createState() => _PlayerListPageState();

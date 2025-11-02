@@ -3,7 +3,6 @@ import 'package:ghost_hunt/models/ghost_type.dart';
 import 'package:ghost_hunt/models/inventory_item.dart';
 import 'package:ghost_hunt/models/player.dart';
 import 'package:ghost_hunt/widgets/colour_background_widget.dart';
-// import 'package:ghost_hunt/widgets/ghost_hunt_appbar.dart';
 import 'package:ghost_hunt/widgets/ghost_list_widget.dart';
 import 'package:ghost_hunt/widgets/list_info_widget.dart';
 import 'package:ghost_hunt/widgets/profile_widget.dart';
@@ -25,7 +24,7 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   late Future<List<GhostType>> _futureGhosts;
-  late final Set<int> _caughtGhostTypeIds;
+  late final Set<String> _caughtGhostTypeIds;
 
   @override
   void initState() {

@@ -4,7 +4,7 @@ import 'package:ghost_hunt/widgets/ghost_card.dart';
 
 class GhostListWidget extends StatelessWidget {
   final List<GhostType> ghosts;
-  final Set<int> caughtGhostTypeIds;
+  final Set<String> caughtGhostTypeIds;
 
   const GhostListWidget({
     super.key,

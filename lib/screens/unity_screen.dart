@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_embed_unity/flutter_embed_unity.dart';
@@ -74,6 +75,6 @@ class _UnityScreenState extends State<UnityScreen> {
   }
 
   void onUnityMessage(message) {
-    print('RECEIVED MESSAGE FROM UNITY: ${message.toString()}');
+    developer.log('RECEIVED MESSAGE FROM UNITY: ${message.toString()}');
   }
 }

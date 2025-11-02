@@ -1,7 +1,7 @@
 // Deel van je data-model (bijv. ghost_type.dart)
 
 class GhostType {
-  final String id;
+  final String? id;
   final String? name;
   final String? description;
   final String? rarity;
