@@ -31,23 +31,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       if (player != null) {
         setState(() {
           _message =
-              'Welcome back, ${widget.username}!\nFetching your inventory...';
+              'Welcome back ${widget.username}!\nFetching your inventory...';
         });
       } else {
         setState(() {
           _message =
-              'Welcome, ${widget.username}!\nFetching list of ghosts to catch.';
+              'Welcome ${widget.username}!\nFetching list of ghosts to catch.';
         });
-        // create new player
+        // If player does not exist, create new player
         player = await PlayerApi.createPlayer(widget.username);
       }
 
-      // keep the welcome screen visible just a bit (like before)
+      // keep the welcome screen visible for a short while to display message
       await Future.delayed(const Duration(seconds: 3));
 
-      // 2. if we somehow ended up with a player without a valid numeric id,
-      // just continue with an empty inventory
-      if (player == null || player.id == null) {
+      // 2. if player id does not exist, just continue with an empty inventory
+      if (
+      // player == null ||
+      player.id == null) {
         if (!mounted) return;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -60,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         return;
       }
 
-      // 3. fetch inventory for THIS player (now we know we have an int id)
+      // 3. fetch inventory for THIS player
       List<InventoryItem> inventoryItems = [];
       try {
         inventoryItems = await InventoryItemApi.fetchInventoryItems(player.id!);
@@ -75,7 +76,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         MaterialPageRoute(
           builder: (_) => ListScreen(
             player: player ?? Player(username: widget.username),
-            // 👇 again: this is the name your ListScreen expects
             inventoryItems: inventoryItems,
           ),
         ),

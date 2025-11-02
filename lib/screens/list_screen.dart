@@ -29,7 +29,6 @@ class _ListScreenState extends State<ListScreen> {
   @override
   void initState() {
     super.initState();
-    // load all ghost types from API / json-server
     _futureGhosts = GhostTypeApi.fetchGhostTypes();
 
     // build a fast lookup for "caught"
@@ -46,7 +45,6 @@ class _ListScreenState extends State<ListScreen> {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // GhostHuntAppbar(),
             ProfileWidget(player: widget.player),
             ListInfoWidget(),
             Expanded(
