@@ -29,10 +29,12 @@ class _ListScreenState extends State<ListScreen> {
   @override
   void initState() {
     super.initState();
+    // load all ghost types from API / json-server
     _futureGhosts = GhostTypeApi.fetchGhostTypes();
-    // make a fast lookup set: which ghosts are already catched
+
+    // build a fast lookup for "caught"
     _caughtGhostTypeIds = widget.inventoryItems
-        .map((e) => e.ghostTypeId)
+        .map((item) => item.ghostTypeId)
         .toSet();
   }
 

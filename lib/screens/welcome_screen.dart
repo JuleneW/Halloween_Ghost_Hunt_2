@@ -4,6 +4,7 @@ import 'package:ghost_hunt/apis/player.api.dart';
 import 'package:ghost_hunt/models/inventory_item.dart';
 import 'package:ghost_hunt/models/player.dart';
 import 'package:ghost_hunt/screens/list_screen.dart';
+import 'package:ghost_hunt/widgets/colour_background_widget.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final String username;
@@ -14,9 +15,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String _message = 'Loading...';
-  String? _error;
-  bool _isLoading = true;
+  String _message = '';
 
   @override
   void initState() {
@@ -39,50 +38,83 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           _message =
               'Welcome, ${widget.username}!\nFetching list of ghosts to catch.';
         });
+        // create new player
         player = await PlayerApi.createPlayer(widget.username);
       }
 
-      // ✨ debug: keep welcome screen visible for 1 second
+      // keep the welcome screen visible just a bit (like before)
       await Future.delayed(const Duration(seconds: 3));
 
-      // 2. fetch inventory for THIS player
-      final List<InventoryItem> inventoryItems =
-          await InventoryItemApi.fetchInventoryItems(player.id!);
+      // 2. if we somehow ended up with a player without a valid numeric id,
+      // just continue with an empty inventory
+      if (player == null || player.id == null) {
+        if (!mounted) return;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => ListScreen(
+              player: player ?? Player(username: widget.username),
+              inventoryItems: const [],
+            ),
+          ),
+        );
+        return;
+      }
 
-      // 3. go to list screen with the player + his inventory
+      // 3. fetch inventory for THIS player (now we know we have an int id)
+      List<InventoryItem> inventoryItems = [];
+      try {
+        inventoryItems = await InventoryItemApi.fetchInventoryItems(player.id!);
+      } catch (_) {
+        // if inventory doesn't exist yet → it's a new player → just show empty list
+        inventoryItems = [];
+      }
+
+      // 4. go to list screen
       if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) =>
-              ListScreen(player: player!, inventoryItems: inventoryItems),
+          builder: (_) => ListScreen(
+            player: player ?? Player(username: widget.username),
+            // 👇 again: this is the name your ListScreen expects
+            inventoryItems: inventoryItems,
+          ),
         ),
       );
-    } catch (e) {
-      // if something goes wrong, show message instead of spinning forever
+    } catch (_) {
+      // final safety net: even if something weird happens, still go to list
       if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-        _error = e.toString();
-      });
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => ListScreen(
+            // we at least know the username
+            player: Player(username: widget.username),
+            inventoryItems: const [],
+          ),
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _isLoading
-            ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(_message, style: const TextStyle(fontSize: 20)),
-                  const SizedBox(height: 16),
-                  const CircularProgressIndicator(),
-                ],
-              )
-            : _error != null
-            ? Text('Error: $_error', style: const TextStyle(color: Colors.red))
-            : Text(_message),
+      body: Stack(
+        children: [
+          ColourBackgroundWidget(),
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _message,
+                  style: const TextStyle(fontSize: 20, color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+                const CircularProgressIndicator(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
