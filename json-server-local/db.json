@@ -123,47 +123,47 @@
   ],
   "players": [
     {
-      "id": 1,
+      "id": "1",
       "username": "Jools"
     },
     {
-      "id": 2,
+      "id": "2",
       "username": "TestPlayer"
     },
     {
-      "id": 3,
+      "id": "3",
       "username": "Someone"
     },
     {
-      "id": "fbe3",
-      "username": "New"
+      "id": "343f",
+      "username": "Tester"
     }
   ],
   "inventory": [
     {
-      "id": 1,
+      "id": "1",
       "playerId": 1,
-      "ghostTypeId": 1
+      "ghostTypeId": "1"
     },
     {
-      "id": 2,
+      "id": "2",
       "playerId": 2,
-      "ghostTypeId": 1
+      "ghostTypeId": "1"
     },
     {
-      "id": 3,
+      "id": "3",
       "playerId": 3,
-      "ghostTypeId": 1
+      "ghostTypeId": "1"
     },
     {
-      "id": 4,
+      "id": "4",
       "playerId": 1,
-      "ghostTypeId": 2
+      "ghostTypeId": "2"
     },
     {
-      "id": 5,
+      "id": "5",
       "playerId": 1,
-      "ghostTypeId": 3
+      "ghostTypeId": "3"
     }
   ]
 }

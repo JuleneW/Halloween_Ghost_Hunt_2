@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_embed_unity/flutter_embed_unity.dart';
 import 'package:ghost_hunt/globals.dart';
@@ -73,6 +73,6 @@ class _TestScreenState extends State<TestScreen> {
   }
 
   void onUnityMessage(message) {
-    print('RECEIVED MESSAGE FROM UNITY: ${message.toString()}');
+    developer.log('RECEIVED MESSAGE FROM UNITY: ${message.toString()}');
   }
 }
