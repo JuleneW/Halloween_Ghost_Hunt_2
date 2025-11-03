@@ -69,7 +69,7 @@ class _TestScreenState extends State<TestScreen> {
 
   // Send username to Unity!
   void _sendUsername() {
-    sendToUnity("CurrentUser", "SetUsername", globalUsername!);
+    sendToUnity("CurrentUser", "SetUsername", globalUsername);
   }
 
   void onUnityMessage(message) {
