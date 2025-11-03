@@ -8,15 +8,35 @@ class GhostCard extends StatelessWidget {
 
   const GhostCard({super.key, required this.ghost, this.isCatched = false});
 
+  // Widget _buildGhostImage(String? imageUrl) {
+  //   if (imageUrl == null || imageUrl.isEmpty) {
+  //     return Image.asset('assets/images/spirit.png', fit: BoxFit.cover);
+  //   }
+
+  //   if (imageUrl.startsWith('http')) {
+  //     return Image.network(imageUrl, fit: BoxFit.cover);
+  //   }
+
+  //   return Image.asset(imageUrl, fit: BoxFit.cover);
+  // }
+
   Widget _buildGhostImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) {
       return Image.asset('assets/images/spirit.png', fit: BoxFit.cover);
     }
 
     if (imageUrl.startsWith('http')) {
-      return Image.network(imageUrl, fit: BoxFit.cover);
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          // if CORS blocks it or the image is gone:
+          return Image.asset('assets/images/spirit.png', fit: BoxFit.cover);
+        },
+      );
     }
 
+    // local relative path from backend or from assets
     return Image.asset(imageUrl, fit: BoxFit.cover);
   }
 
