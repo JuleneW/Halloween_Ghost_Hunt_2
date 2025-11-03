@@ -34,27 +34,78 @@ class PlayerApi {
 
   // 1. check if player exists
   static Future<Player?> getPlayerByName(String username) async {
-    // build URL safely
+    // try the same URL you have now
     final uri = Uri.parse(
       '$server/players',
     ).replace(queryParameters: {'username': username});
 
     final resp = await http.get(uri);
 
-    // DEBUG
-    log('GET $uri → ${resp.statusCode}');
-    log('BODY: ${resp.body}');
-
+    // if backend ignores the query and gives us a list of all players,
+    // we just filter it ourselves
     if (resp.statusCode == 200) {
       final data = json.decode(resp.body);
-      if (data is List && data.isNotEmpty) {
-        return Player.fromJson(data.first);
+
+      if (data is List) {
+        for (final item in data) {
+          final p = Player.fromJson(item as Map<String, dynamic>);
+          // adjust field name if your model uses `name` instead of `username`
+          if (p.username == username) {
+            return p;
+          }
+        }
+        // not found in the list
+        return null;
       }
-      return null; // not found
-    } else {
-      throw Exception('Failed to load player (status ${resp.statusCode})');
+
+      // if backend gives a single object instead of a list
+      if (data is Map<String, dynamic>) {
+        final p = Player.fromJson(data);
+        if (p.username == username) {
+          return p;
+        }
+      }
+
+      return null;
     }
+
+    // if backend says "method not allowed" for ?username=...
+    if (resp.statusCode == 405) {
+      // fallback: get all players and filter
+      final all = await fetchPlayers();
+      try {
+        return all.firstWhere((p) => p.username == username);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    throw Exception('Failed to load player (status ${resp.statusCode})');
   }
+
+  // static Future<Player?> getPlayerByName(String username) async {
+  //   // build URL safely
+  //   final uri = Uri.parse(
+  //     '$server/players',
+  //   ).replace(queryParameters: {'username': username});
+
+  //   final resp = await http.get(uri);
+
+  //   // DEBUG
+  //   log('GET $uri → ${resp.statusCode}');
+  //   log('BODY: ${resp.body}');
+
+  //   if (resp.statusCode == 200) {
+  //     final data = json.decode(resp.body);
+
+  //     if (data is List && data.isNotEmpty) {
+  //       return Player.fromJson(data.first);
+  //     }
+  //     return null; // not found
+  //   } else {
+  //     throw Exception('Failed to load player (status ${resp.statusCode})');
+  //   }
+  // }
 
   // 2. create player
   static Future<Player> createPlayer(String username) async {
