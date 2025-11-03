@@ -18,6 +18,7 @@ class UnityScreen extends StatefulWidget {
 
 class _UnityScreenState extends State<UnityScreen> {
   bool _isCameraPermissionGranted = false;
+  String unityMessage = '';
 
   @override
   void initState() {
@@ -45,14 +46,7 @@ class _UnityScreenState extends State<UnityScreen> {
       appBar: AppBar(title: const Text("Ghost Hunt")),
       body: Material(
         color: const Color.fromARGB(255, 76, 203, 203),
-        child: EmbedUnity(
-          onMessageFromUnity: (String message) {
-            if (message == "scene_loaded") {
-              _sendLocation();
-              _sendUsername();
-            }
-          },
-        ),
+        child: EmbedUnity(onMessageFromUnity: _onUnityMessage),
       ),
     );
   }
@@ -71,10 +65,29 @@ class _UnityScreenState extends State<UnityScreen> {
 
   // Send username to Unity!
   void _sendUsername() {
-    sendToUnity("CurrentUser", "SetUsername", globalUsername!);
+    sendToUnity("CurrentUser", "SetUsername", globalUsername);
   }
 
-  void onUnityMessage(message) {
-    developer.log('RECEIVED MESSAGE FROM UNITY: ${message.toString()}');
+  void _onUnityMessage(String message) {
+    developer.log('RECEIVED MESSAGE FROM UNITY: $message');
+
+    // Save latest message for display (optional)
+    setState(() {
+      unityMessage = message;
+    });
+
+    // Respond to specific Unity signals
+    if (message == "scene_loaded") {
+      _sendLocation();
+      _sendUsername();
+    }
+
+    // Optional: visual debug message on phone
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Unity: $message'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 }

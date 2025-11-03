@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 class InventoryItemApi {
   /// Get all inventory items for ONE player
   static Future<List<InventoryItem>> fetchInventoryItems(int playerId) async {
-    final uri = Uri.parse("$server/inventory?playerId=$playerId");
+    // final uri = Uri.parse("$server/inventory?playerId=$playerId");
+    final uri = Uri.parse("$server/inventory/player/$playerId");
+
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
