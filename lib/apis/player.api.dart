@@ -83,30 +83,6 @@ class PlayerApi {
     throw Exception('Failed to load player (status ${resp.statusCode})');
   }
 
-  // static Future<Player?> getPlayerByName(String username) async {
-  //   // build URL safely
-  //   final uri = Uri.parse(
-  //     '$server/players',
-  //   ).replace(queryParameters: {'username': username});
-
-  //   final resp = await http.get(uri);
-
-  //   // DEBUG
-  //   log('GET $uri → ${resp.statusCode}');
-  //   log('BODY: ${resp.body}');
-
-  //   if (resp.statusCode == 200) {
-  //     final data = json.decode(resp.body);
-
-  //     if (data is List && data.isNotEmpty) {
-  //       return Player.fromJson(data.first);
-  //     }
-  //     return null; // not found
-  //   } else {
-  //     throw Exception('Failed to load player (status ${resp.statusCode})');
-  //   }
-  // }
-
   // 2. create player
   static Future<Player> createPlayer(String username) async {
     final uri = Uri.parse('$server/players');

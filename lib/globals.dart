@@ -3,15 +3,21 @@ import 'package:geolocator/geolocator.dart';
 String globalUsername = '';
 Position? globalPosition;
 
-// Locally installed json server:
-// json-server --watch db.json *or with string parsing file* npx json-server server.js
-// GET/POST http://localhost:3000/ghost-types
-// GET/POST http://localhost:3000/players
-// GET/PUT/PATCH/DELETE http://localhost:3000/ghost-types/:id (same for players)
-// It hot-reloads when you edit db.json.
+// Update server mobile/local json server/spring backend/ngrok
+// also update endpoint in inventoryItem.api.dart when switching from json server
 
+// Locally installed json server: json-server --watch db.json
+String server = "http://localhost:3000";
+
+// Spring API backend: Open Ghost Hunt backend in IntelliJ and open docker engine --> docker-compose up
 // String server = "http://localhost:8084";
-// String server = "http://localhost:3000";
-// start localTunnel (correct port) for smartphone and copy url: lt --port 3000
+
+// start localTunnel ( + correct port) for smartphone and copy url: lt --port 'port'
 // Visit this url in serving pc browser for password --> https://loca.lt/mytunnelpassword
-String server = 'https://loose-masks-search.loca.lt';
+// String server = 'https://dark-lands-rescue.loca.lt';
+
+// Ngrok server ( + backend port): ngrok http 'port'
+// String server = 'https://mao-subtympanitic-pauletta.ngrok-free.dev';
+
+
+// String server = 'http://192.168.0.86:8084';

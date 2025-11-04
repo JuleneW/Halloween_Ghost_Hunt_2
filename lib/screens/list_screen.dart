@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghost_hunt/apis/inventoryItem.api.dart';
 import 'package:ghost_hunt/models/ghost_type.dart';
 import 'package:ghost_hunt/models/inventory_item.dart';
 import 'package:ghost_hunt/models/player.dart';
@@ -37,6 +38,21 @@ class _ListScreenState extends State<ListScreen> {
         .toSet();
   }
 
+  Future<void> _reloadInventory() async {
+    // player.id might be nullable depending on your model, so guard it
+    final playerId = widget.player.id;
+    if (playerId == null) return;
+
+    final items = await InventoryItemApi.fetchInventoryItems(
+      playerId,
+    ); // get latest
+    setState(() {
+      _caughtGhostTypeIds = items
+          .map((item) => item.ghostTypeId)
+          .toSet(); // rebuild the set
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -62,6 +78,7 @@ class _ListScreenState extends State<ListScreen> {
                   return GhostListWidget(
                     ghosts: ghosts,
                     caughtGhostTypeIds: _caughtGhostTypeIds,
+                    onGhostCaught: _reloadInventory,
                   );
                 },
               ),

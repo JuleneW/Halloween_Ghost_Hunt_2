@@ -4,21 +4,15 @@ import 'package:ghost_hunt/screens/unity_screen.dart';
 
 class GhostCard extends StatelessWidget {
   final GhostType ghost;
-  final bool isCatched;
+  final bool isCaught;
+  final VoidCallback? onGhostCaught;
 
-  const GhostCard({super.key, required this.ghost, this.isCatched = false});
-
-  // Widget _buildGhostImage(String? imageUrl) {
-  //   if (imageUrl == null || imageUrl.isEmpty) {
-  //     return Image.asset('assets/images/spirit.png', fit: BoxFit.cover);
-  //   }
-
-  //   if (imageUrl.startsWith('http')) {
-  //     return Image.network(imageUrl, fit: BoxFit.cover);
-  //   }
-
-  //   return Image.asset(imageUrl, fit: BoxFit.cover);
-  // }
+  const GhostCard({
+    super.key,
+    required this.ghost,
+    this.isCaught = false,
+    this.onGhostCaught,
+  });
 
   Widget _buildGhostImage(String? imageUrl) {
     if (imageUrl == null || imageUrl.isEmpty) {
@@ -95,29 +89,46 @@ class GhostCard extends StatelessWidget {
                                 fontSize: 15,
                               ),
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 8,
-                                ),
-                                minimumSize: const Size(30, 30),
-                                textStyle: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (context) =>
-                                        UnityScreen(ghostType: ghost),
+                            if (!isCaught)
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
                                   ),
-                                );
-                              },
-                              child: const Text('GO!'),
-                            ),
+                                  minimumSize: const Size(30, 30),
+                                  textStyle: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  final result = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute<bool>(
+                                      builder: (context) =>
+                                          UnityScreen(ghostType: ghost),
+                                    ),
+                                  );
+                                  if (!context.mounted) return;
+                                  // UnityScreen should do: Navigator.pop(context, true); when catch saved
+                                  if (result == true) {
+                                    // tell the parent to refresh inventory
+                                    if (onGhostCaught != null) {
+                                      onGhostCaught!();
+                                    }
+
+                                    // optional: little feedback
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Ghost caught!'),
+                                      ),
+                                    );
+                                  }
+                                },
+
+                                child: const Text('GO!'),
+                              ),
                           ],
                         ),
                       ],
@@ -127,21 +138,27 @@ class GhostCard extends StatelessWidget {
               ),
             ),
           ),
-          if (isCatched)
-            Positioned(
-              top: 8,
-              right: 8,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.9),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text(
-                  'Catched',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          if (isCaught)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Transform.rotate(
+                  angle: -0.2,
+                  child: Center(
+                    child: Container(
+                      height: 22, // thin ribbon (height = thickness)
+                      color: const Color(0xFF1B5E20).withValues(alpha: 0.85),
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'CAUGHT',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16, // smaller letters
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          decoration: TextDecoration.none, // no underline
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -5,11 +5,13 @@ import 'package:ghost_hunt/widgets/ghost_card.dart';
 class GhostListWidget extends StatelessWidget {
   final List<GhostType> ghosts;
   final Set<String> caughtGhostTypeIds;
+  final VoidCallback? onGhostCaught;
 
   const GhostListWidget({
     super.key,
     required this.ghosts,
     required this.caughtGhostTypeIds,
+    this.onGhostCaught,
   });
 
   @override
@@ -18,8 +20,14 @@ class GhostListWidget extends StatelessWidget {
       itemCount: ghosts.length,
       itemBuilder: (context, index) {
         final ghost = ghosts[index];
-        final isCatched = caughtGhostTypeIds.contains(ghost.id);
-        return GhostCard(ghost: ghost, isCatched: isCatched);
+        final isCaught =
+            ghost.id != null && caughtGhostTypeIds.contains(ghost.id!);
+
+        return GhostCard(
+          ghost: ghost,
+          isCaught: isCaught,
+          onGhostCaught: onGhostCaught,
+        );
       },
     );
   }
