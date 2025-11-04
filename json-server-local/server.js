@@ -1,3 +1,4 @@
+// import jsonServer from 'C:\Users\julen\AppData\Roaming\npm\node_modules'
 import { create, router as _router, defaults } from 'json-server';
 import fs from 'fs';
 
