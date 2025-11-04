@@ -8,10 +8,10 @@
       "imageUrl": "https://JuleneW.github.io/ghost-images/Ariados.png",
       "spawnLocations": [
         {
-          "latitude": 51.157714522458186,
-          "longitude": 4.968181695265942,
+          "latitude": 51.100561,
+          "longitude": 4.960975,
           "radius": 30,
-          "locationName": "Innovatiecampus"
+          "locationName": "trampoline"
         }
       ]
     },
@@ -68,10 +68,10 @@
       "imageUrl": "https://JuleneW.github.io/ghost-images/Labubu_Monster.png",
       "spawnLocations": [
         {
-          "latitude": 51.16164862954788,
-          "longitude": 4.962484077627229,
+          "latitude": 51.10057,
+          "longitude": 4.960699,
           "radius": 30,
-          "locationName": "D blok"
+          "locationName": "Living"
         }
       ]
     },
@@ -98,10 +98,10 @@
       "imageUrl": "https://JuleneW.github.io/ghost-images/Shelly_the_Witch.png",
       "spawnLocations": [
         {
-          "latitude": 51.16170469827602,
-          "longitude": 4.962662953630521,
+          "latitude": 51.100561,
+          "longitude": 4.960975,
           "radius": 30,
-          "locationName": "Parking Ebikes"
+          "locationName": "trampoline"
         }
       ]
     },
@@ -113,8 +113,8 @@
       "imageUrl": "https://JuleneW.github.io/ghost-images/Skeleton.png",
       "spawnLocations": [
         {
-          "latitude": 51.16233108561868,
-          "longitude": 4.961353434036578,
+          "latitude": 51.100641,
+          "longitude": 4.960597,
           "radius": 30,
           "locationName": "Bricks and more"
         }
@@ -123,43 +123,48 @@
   ],
   "players": [
     {
-      "id": 1,
+      "id": "1",
       "username": "Jools"
     },
     {
-      "id": 2,
+      "id": "2",
       "username": "TestPlayer"
     },
     {
-      "id": 3,
+      "id": "3",
       "username": "Someone"
     }
   ],
   "inventory": [
     {
-      "id": 1,
+      "id": "1",
       "playerId": 1,
       "ghostTypeId": "1"
     },
     {
-      "id": 2,
+      "id": "2",
       "playerId": 2,
       "ghostTypeId": "1"
     },
     {
-      "id": 3,
+      "id": "3",
       "playerId": 3,
       "ghostTypeId": "1"
     },
     {
-      "id": 4,
+      "id": "4",
       "playerId": 1,
       "ghostTypeId": "2"
     },
     {
-      "id": 5,
+      "id": "5",
       "playerId": 1,
       "ghostTypeId": "3"
+    },
+    {
+      "id": "daee",
+      "playerId": 1,
+      "ghostTypeId": "5"
     }
   ]
 }
