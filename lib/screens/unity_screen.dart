@@ -28,9 +28,43 @@ class _UnityScreenState extends State<UnityScreen> {
     _checkCameraPermission();
   }
 
+  // auto-closing dialog that also pops back
+  void _showCaughtDialogAndReturn(BuildContext ctx, NavigatorState navigator) {
+    showDialog(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        // capture dialog navigator here (before async gap)
+        final dialogNavigator = Navigator.of(dialogContext);
+
+        Future.delayed(const Duration(seconds: 1), () {
+          // close dialog first
+          if (dialogNavigator.canPop()) {
+            dialogNavigator.pop();
+          }
+
+          // then go back to list screen and tell it to refresh
+          if (navigator.mounted) {
+            navigator.pop(true);
+          }
+        });
+
+        return const AlertDialog(
+          title: Text(
+            'Good job!',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+          content: Text('You caught the ghost!', textAlign: TextAlign.center),
+        );
+      },
+    );
+  }
+
   // Check for camera permission
   Future<void> _checkCameraPermission() async {
-    final status = await Permission.camera.request(); // vragen van permissies
+    final status = await Permission.camera.request();
+    if (!mounted) return;
     setState(() {
       _isCameraPermissionGranted = status.isGranted;
     });
@@ -55,9 +89,6 @@ class _UnityScreenState extends State<UnityScreen> {
 
   // Send chosen location to Unity!
   void _sendLocation() {
-    // moet de naam van het gameobject zijn, niet de naam van het script
-    // de naam van de method
-    // het object als string
     sendToUnity(
       "TargetLocation",
       "ReceiveTargetJson",
@@ -70,36 +101,15 @@ class _UnityScreenState extends State<UnityScreen> {
     sendToUnity("CurrentUser", "SetUsername", globalUsername);
   }
 
-  // void _onUnityMessage(String message) {
-  //   developer.log('RECEIVED MESSAGE FROM UNITY: $message');
-
-  //   // Save latest message for display (optional)
-  //   setState(() {
-  //     unityMessage = message;
-  //   });
-
-  //   // Respond to specific Unity signals
-  //   if (message == "scene_loaded") {
-  //     _sendLocation();
-  //     _sendUsername();
-  //   }
-
-  //   // Optional: visual debug message on phone
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('Unity: $message'),
-  //       duration: const Duration(seconds: 2),
-  //     ),
-  //   );
-  // }
-
-  void _onUnityMessage(String message) async {
+  // keep this non-async
+  void _onUnityMessage(String message) {
     developer.log('RECEIVED MESSAGE FROM UNITY: $message');
 
-    // keep showing the latest message if you want
-    setState(() {
-      unityMessage = message;
-    });
+    if (mounted) {
+      setState(() {
+        unityMessage = message;
+      });
+    }
 
     // 1) some messages are just plain strings
     if (message == "scene_loaded") {
@@ -108,12 +118,12 @@ class _UnityScreenState extends State<UnityScreen> {
       return;
     }
 
-    // 2) try to parse JSON messages (like the ones you showed)
+    // 2) try to parse JSON messages
     Map<String, dynamic>? data;
     try {
       data = jsonDecode(message) as Map<String, dynamic>;
     } catch (_) {
-      // not JSON → just show it
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Unity: $message')));
@@ -123,51 +133,26 @@ class _UnityScreenState extends State<UnityScreen> {
     final key = data['key'] as String?;
     if (key == null) return;
 
-    // ---- handle the different Unity messages ----
     if (key == 'GhostCatched') {
+      // pull out fields first
       final success = data['success'] == true;
       final ghostTypeId = data['ghostTypeId']?.toString();
       final username = data['username']?.toString();
 
-      if (success && ghostTypeId != null && username != null) {
-        try {
-          // 1. find player by username
-          final player = await PlayerApi.getPlayerByName(username);
-
-          if (player != null) {
-            // 2. add inventory item for this player
-            await InventoryItemApi.addInventoryItem(player.id!, ghostTypeId);
-
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Ghost added to inventory ✅')),
-            );
-
-            // 3. go back and tell previous screen to refresh
-            Navigator.pop(context, true);
-          } else {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Player "$username" not found')),
-            );
-          }
-        } catch (e) {
-          if (!mounted) return;
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Error saving ghost: $e')));
-        }
-      } else {
-        // Unity said it failed
+      // if invalid → handle here (sync) so the async method stays clean
+      if (!(success && ghostTypeId != null && username != null)) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(data['message']?.toString() ?? 'Catch failed'),
           ),
         );
+        return;
       }
+
+      // valid → hand off to async method
+      _handleGhostCatched(ghostTypeId, username);
     } else if (key == 'catch_abort') {
-      // user walked away
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data['message']?.toString() ?? 'Catch aborted')),
@@ -177,6 +162,40 @@ class _UnityScreenState extends State<UnityScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data['message']?.toString() ?? 'Catch failed')),
       );
+    }
+  }
+
+  // async method gets only validated params
+  Future<void> _handleGhostCatched(String ghostTypeId, String username) async {
+    // ✅ capture context-related stuff BEFORE any await
+    if (!mounted) return;
+    final ctx = context;
+    final messenger = ScaffoldMessenger.of(ctx);
+    final navigator = Navigator.of(ctx);
+
+    try {
+      // 1. find player by username
+      final player = await PlayerApi.getPlayerByName(username);
+
+      if (player != null) {
+        // 2. add inventory item for this player
+        await InventoryItemApi.addInventoryItem(player.id!, ghostTypeId);
+
+        // 3. show snackbar
+        messenger.showSnackBar(
+          const SnackBar(content: Text('Ghost added to inventory ✅')),
+        );
+
+        // 4. show auto-close dialog + go back
+        _showCaughtDialogAndReturn(ctx, navigator);
+      } else {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Player "$username" not found')),
+        );
+      }
+    } catch (e) {
+      // still safe: we use captured messenger
+      messenger.showSnackBar(SnackBar(content: Text('Error saving ghost: $e')));
     }
   }
 }
