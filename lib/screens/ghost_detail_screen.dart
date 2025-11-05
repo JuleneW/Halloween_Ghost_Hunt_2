@@ -16,6 +16,7 @@ class GhostDetailScreen extends StatelessWidget {
         title: Text(ghost.name ?? ''),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [
