@@ -3,8 +3,15 @@ import 'package:ghost_hunt/models/player.dart';
 
 class ProfileWidget extends StatelessWidget {
   final Player player;
+  final int score;
+  final String level;
 
-  const ProfileWidget({super.key, required this.player});
+  const ProfileWidget({
+    super.key,
+    required this.player,
+    required this.score,
+    required this.level,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +51,7 @@ class ProfileWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '10',
+                    score.toString(),
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 5),
                       decoration: TextDecoration.none,
@@ -64,7 +71,7 @@ class ProfileWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'Expert',
+                    level,
                     style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 5),
                       decoration: TextDecoration.none,
