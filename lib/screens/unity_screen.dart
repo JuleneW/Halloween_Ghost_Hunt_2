@@ -101,7 +101,7 @@ class _UnityScreenState extends State<UnityScreen> {
     sendToUnity("CurrentUser", "SetUsername", globalUsername);
   }
 
-  // keep this non-async
+
   void _onUnityMessage(String message) {
     developer.log('RECEIVED MESSAGE FROM UNITY: $message');
 
@@ -157,6 +157,9 @@ class _UnityScreenState extends State<UnityScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data['message']?.toString() ?? 'Catch aborted')),
       );
+      // Pop Unity and Details to return to List
+      Navigator.pop(context); // Unity screen
+      Navigator.pop(context); // Details screen
     } else if (key == 'GhostCatchedFailed') {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

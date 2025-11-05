@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ghost_hunt/models/ghost_type.dart';
+import 'package:ghost_hunt/screens/ghost_detail_screen.dart';
 import 'package:ghost_hunt/screens/unity_screen.dart';
 
 class GhostCard extends StatelessWidget {
@@ -64,15 +65,29 @@ class GhostCard extends StatelessWidget {
                     flex: 2,
                     child: Column(
                       children: [
+                        // 👇 clickable name
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              ghost.name ?? 'Ghost name',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                decoration: TextDecoration.none,
-                                fontSize: 20,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        GhostDetailScreen(ghost: ghost),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                ghost.name ?? 'Ghost name',
+                                style: const TextStyle(
+                                  color: Colors.white, // 👻 white text
+                                  decoration: TextDecoration.underline,
+                                  decorationColor:
+                                      Colors.white, // 👻 white underline
+                                  fontSize: 20,
+                                ),
                               ),
                             ),
                           ],
