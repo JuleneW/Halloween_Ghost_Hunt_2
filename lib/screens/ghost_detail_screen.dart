@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ghost_hunt/screens/unity_screen.dart';
 import '../models/ghost_type.dart';
 import '../widgets/colour_background_widget.dart'; // your existing one
 
@@ -106,9 +107,22 @@ class GhostDetailScreen extends StatelessWidget {
                   ),
 
                 const SizedBox(height: 24),
-                Text(
-                  'ID: ${ghost.id}',
-                  style: const TextStyle(color: Colors.white38, fontSize: 12),
+
+                // Text(
+                //   'ID: ${ghost.id}',
+                //   style: const TextStyle(color: Colors.white38, fontSize: 12),
+                // ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => UnityScreen(ghostType: ghost),
+                      ),
+                    );
+                  },
+                  child: const Text('Start game'),
                 ),
               ],
             ),

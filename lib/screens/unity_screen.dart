@@ -70,29 +70,6 @@ class _UnityScreenState extends State<UnityScreen> {
     sendToUnity("CurrentUser", "SetUsername", globalUsername);
   }
 
-  // void _onUnityMessage(String message) {
-  //   developer.log('RECEIVED MESSAGE FROM UNITY: $message');
-
-  //   // Save latest message for display (optional)
-  //   setState(() {
-  //     unityMessage = message;
-  //   });
-
-  //   // Respond to specific Unity signals
-  //   if (message == "scene_loaded") {
-  //     _sendLocation();
-  //     _sendUsername();
-  //   }
-
-  //   // Optional: visual debug message on phone
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text('Unity: $message'),
-  //       duration: const Duration(seconds: 2),
-  //     ),
-  //   );
-  // }
-
   void _onUnityMessage(String message) async {
     developer.log('RECEIVED MESSAGE FROM UNITY: $message');
 
@@ -172,6 +149,9 @@ class _UnityScreenState extends State<UnityScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(data['message']?.toString() ?? 'Catch aborted')),
       );
+      // Pop Unity and Details to return to List
+      Navigator.pop(context); // Unity screen
+      Navigator.pop(context); // Details screen
     } else if (key == 'GhostCatchedFailed') {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
