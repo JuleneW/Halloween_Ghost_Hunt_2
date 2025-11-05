@@ -25,7 +25,7 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   late Future<List<GhostType>> _futureGhosts;
-  late final Set<String> _caughtGhostTypeIds;
+  Set<String> _caughtGhostTypeIds = {};
   List<GhostType> _allGhostTypes = [];
 
   @override
