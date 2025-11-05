@@ -113,8 +113,8 @@
       "imageUrl": "https://JuleneW.github.io/ghost-images/Skeleton.png",
       "spawnLocations": [
         {
-          "latitude": 51.100641,
-          "longitude": 4.960597,
+          "latitude": 51.100661,
+          "longitude": 4.960434,
           "radius": 30,
           "locationName": "Bricks and more"
         }
@@ -165,6 +165,11 @@
       "id": "daee",
       "playerId": 1,
       "ghostTypeId": "5"
+    },
+    {
+      "id": "a4bc",
+      "playerId": 1,
+      "ghostTypeId": "8"
     }
   ]
 }
